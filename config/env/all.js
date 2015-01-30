@@ -7,6 +7,8 @@ module.exports = {
         keywords: 'Main App'
     },
     port: process.env.PORT || 3000,
+    sessionSecret: 'Ariel',
+    sessionCollection: 'sessions',
     assets: {
         lib: {
             css: [

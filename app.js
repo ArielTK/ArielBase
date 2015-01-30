@@ -1,16 +1,19 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
+// var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var session = require('express-session');
+var mongoStore = require('connect-mongo')(session);
 
-mongoose.connect('mongodb://localhost/my_database');
+mongoose.connect(config.db);
 
 var app = express();
+
 
 app.locals.title = config.app.title;
 
@@ -36,6 +39,18 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(session({
+    secret: config.sessionSecret,
+    saveUninitialized: true,
+    resave: true,
+    store: new mongoStore({
+        url: config.db,
+        collection: config.sessionCollection
+    })
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(function (req, res, next) {
 
     if (req.url !== "/login/") {
@@ -47,7 +62,6 @@ app.use(function (req, res, next) {
         }
 
     }
-
 
     next();
 });
@@ -69,7 +83,7 @@ app.use(function (req, res, next) {
 // development error handler
 // will print stacktrace
 if (app.get('env') === 'development') {
-    app.use(function (err, req, res, next) {
+    app.use(function (err, req, res,) {
         res.status(err.status || 500);
         res.render('error', {
             message: err.message,
@@ -80,7 +94,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,

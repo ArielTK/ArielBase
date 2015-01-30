@@ -1,6 +1,5 @@
 module.exports = function (app) {
 
-    var express = require('express');
     var users = require('../controllers/users');
 
     /* GET users listing. */

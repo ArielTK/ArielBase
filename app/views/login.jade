@@ -1,9 +1,11 @@
 extends layout
 block content
     h1= 'Login'
-    p Welcome to #{title}
+    p Login - #{title}
     div.loginbox
-    form(name="login", action="/login", method="post")
-        input(type="text", name="user")
-        input(type="password", name="pass")
+    form(name="login", action="", method="post")
+        input(type="text", name="username", placeholder="Username")
+        br
+        input(type="password", name="password", placeholder="Password")
+        br
         input(type="submit", value="login")
